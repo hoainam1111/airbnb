@@ -7,20 +7,17 @@ application.debug = false
 window.Stimulus   = application
 
 export { application }
+
 const swiper = new Swiper('.swiper', {
-    // Optional parameters
-    
-    loop: true,
+  // Optional parameters
+  loop: true,
+  observer: true,
+  observeParents: true,
+  observeParents: true,
+  // Navigation arrows
+  navigation: {
+    nextEl: '.swiper-button-next',
+    prevEl: '.swiper-button-prev',
+  },
   
-    // If we need pagination
-    
-  
-    // Navigation arrows
-    navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
-    },
-  
-    // And if we need scrollbar
-    
-  });
+});

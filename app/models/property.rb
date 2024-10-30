@@ -11,6 +11,11 @@ class Property < ApplicationRecord
   monetize :price_cents, allow_nil: true
   has_many_attached :images
   has_many :reviews, dependent: :destroy
+  has_many :wishlists, dependent: :destroy
+  # hiết lập mối quan hệ thông qua bảng trung gian wishlists, với source là user, để lấy ra tất cả người dùng đã wishlist một property.
+  has_many :wishlisted_users, through: :wishlists, source: :user, dependent: :destroy
+
+
 
   def update_average_rating
     # this will get called whenever a new review is added or updated.
