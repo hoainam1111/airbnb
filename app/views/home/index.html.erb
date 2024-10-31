@@ -56,8 +56,11 @@
                             <%= property.average_final_rating.round(2) %>
                         </p>
                     </div>
+                    <%# TODO: add distance from property based on location %>
                     <p class="mt-0.5 text-sm text-gray-500">Hosted by Nawm</p>
-                    <p class="mt-0.5 text-sm text-gray-500">20-24 Jan</p>
+                    <p class="mt-0.5 text-sm text-gray-500">
+                      <%= property.available_dates.first %> - <%= property.available_dates.last %>
+                    </p>
                     <p class="mt-0.5 text-sm text-gray-500">
                         <span class=" font-bold">
                           <%= humanized_money_with_symbol(property.price)  %>

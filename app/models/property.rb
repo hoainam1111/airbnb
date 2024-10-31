@@ -15,6 +15,8 @@ class Property < ApplicationRecord
   # hiết lập mối quan hệ thông qua bảng trung gian wishlists, với source là user, để lấy ra tất cả người dùng đã wishlist một property.
   has_many :wishlisted_users, through: :wishlists, source: :user, dependent: :destroy
 
+  has_many :reservations, dependent: :destroy
+  has_many :reserved_users, through: :reservations, source: :user, dependent: :destroy
 
 
   def update_average_rating
@@ -31,5 +33,29 @@ class Property < ApplicationRecord
     return if user.nil?
     # Sử dụng phương thức include? để kiểm tra xem user có nằm trong danh sách wishlisted_users hay không.
     wishlisted_users.include?(user)
+  end
+
+
+  # Phương thức này giúp tính toán và trả về khoảng thời gian mà không có đặt phòng nào,
+  # nhằm xác định các ngày có thể được đặt thêm trong tương lai.
+  def available_dates
+    # ấy bản ghi đặt phòng sắp tới đầu tiên (gần nhất) bằng cách sử dụng phạm vi upcoming_reservations.
+    next_reservation = reservations.upcoming_reservations.first
+    # current_reservation: Lấy bản ghi đặt phòng hiện tại đầu tiên (nếu có) bằng cách sử dụng phạm vi current_reservations.
+    current_reservation = reservations.current_reservations.first
+
+    if current_reservation.nil? && next_reservation.nil?
+      # Nếu không có đặt phòng nào cả, khoảng thời gian có sẵn sẽ từ ngày mai đến 30 ngày sau.
+      Date.tomorrow.strftime("%e %b")..(Date.tomorrow + 30.days).strftime("%e %b")
+    elsif current_reservation.nil?
+      # Nếu không có đặt phòng đang diễn ra nhưng có một đặt phòng sắp tới, khoảng thời gian có sẵn sẽ từ ngày mai đến ngày bắt đầu của đặt phòng sắp tới.
+      Date.tomorrow.strftime("%e %b")..next_reservation.checkin_date.strftime("%e %b")
+    elsif next_reservation.nil?
+      # Nếu có đặt phòng hiện tại nhưng không có đặt phòng sắp tới, khoảng thời gian có sẵn sẽ từ ngày trả phòng của đặt phòng hiện tại đến 30 ngày sau hôm nay.
+      current_reservation.checkout_date.strftime("%e %b")..(Date.tomorrow + 30.days).strftime("%e %b")
+    else
+      # Nếu có cả hai loại đặt phòng, khoảng thời gian có sẵn sẽ từ ngày trả phòng của đặt phòng hiện tại đến ngày nhận phòng của đặt phòng sắp tới.
+      current_reservation.checkout_date.strftime("%e %b")..next_reservation.checkin_date.strftime("%e %b")
+    end
   end
 end
