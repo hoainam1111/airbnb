@@ -22,4 +22,14 @@ class Property < ApplicationRecord
     average_rating = reviews.average(:final_rating)
     update_column(:average_final_rating, average_rating)
   end
+
+  def wishlisted_by?(user = nil)
+    # Nếu user là nil,
+    # phương thức sẽ trả về false ngay lập tức.
+    # Điều này giúp đảm bảo rằng nếu không có người dùng nào được cung cấp, phương thức sẽ không thực hiện kiểm tra
+    # và trả về false thay vì nil.
+    return if user.nil?
+    # Sử dụng phương thức include? để kiểm tra xem user có nằm trong danh sách wishlisted_users hay không.
+    wishlisted_users.include?(user)
+  end
 end

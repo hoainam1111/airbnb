@@ -24,7 +24,7 @@ module Api
           # Trả về mã trạng thái HTTP 204 (No Content),
           # nghĩa là yêu cầu đã được thực hiện thành công
           # nhưng không trả về nội dung nào.
-          render status: 204
+          render json: wishlist.to_json, status: 204
         end
       end
     end
