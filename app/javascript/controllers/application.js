@@ -13,7 +13,7 @@ const swiper = new Swiper('.swiper', {
   loop: true,
   observer: true,
   observeParents: true,
-  observeParents: true,
+
   // Navigation arrows
   navigation: {
     nextEl: '.swiper-button-next',
