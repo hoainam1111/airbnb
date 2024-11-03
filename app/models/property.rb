@@ -25,7 +25,24 @@ class Property < ApplicationRecord
     average_rating = reviews.average(:final_rating)
     update_column(:average_final_rating, average_rating)
   end
-
+  def average_cleanliness_rating
+    reviews.average(:cleanliness_rating).to_f.round(1)
+  end
+  def average_accuracy_rating
+    reviews.average(:accuracy_rating).to_f.round(1)
+  end
+  def average_checkin_rating
+    reviews.average(:checkin_rating).to_f.round(1)
+  end
+  def average_communication_rating
+    reviews.average(:communication_rating).to_f.round(1)
+  end
+  def average_location_rating
+    reviews.average(:location_rating).to_f.round(1)
+  end
+  def average_value_rating
+    reviews.average(:value_rating).to_f.round(1)
+  end
   def wishlisted_by?(user = nil)
     # Nếu user là nil,
     # phương thức sẽ trả về false ngay lập tức.
