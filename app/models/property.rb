@@ -18,6 +18,9 @@ class Property < ApplicationRecord
   has_many :reservations, dependent: :destroy
   has_many :reserved_users, through: :reservations, source: :user, dependent: :destroy
 
+  has_many :property_amenities, dependent: :destroy
+  has_many :amenities, through: :property_amenities, source: :amenity, dependent: :destroy
+  # rubocop:disable Layout/TrailingWhitespace
   has_rich_text :description
 
   def update_average_rating
