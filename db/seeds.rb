@@ -7,10 +7,32 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
 user = User.create!(
-  email: "nam@gmail.com",
-  password: "123456"
+  email: "test1@gmail.com",
+  password: "123456",
+  name: Faker::Lorem.unique.sentence(word_count: 3),
+  address_1: Faker::Address.street_address,
+  address_2: Faker::Address.street_name,
+  city: Faker::Address.city,
+  state: Faker::Address.state,
+  country: Faker::Address.country
 )
+user.picture.attach(io: File.open('db/images/0.jpg'), filename: user.name)
+
+19.times do |i|
+  random_user = User.create!({
+    email: "test#{i + 2}@gmail.com",
+    password: "123456",
+    name: Faker::Lorem.unique.sentence(word_count: 3),
+    address_1: Faker::Address.street_address,
+    address_2: Faker::Address.street_name,
+    city: Faker::Address.city,
+    state: Faker::Address.state,
+    country: Faker::Address.country
+  })
+  random_user.picture.attach(io: File.open("db/images/#{i+1}.jpg"), filename: random_user.name)
+end
 6.times do |i|
   property = Property.create!({
     name: Faker::Lorem.unique.sentence(word_count: 3),
@@ -46,7 +68,7 @@ user = User.create!(
       location_rating: (1..5).to_a.sample,
       value_rating: (1..5).to_a.sample,
       property: property,
-      user: user
+      user: User.all.sample
     })
   end
 end
