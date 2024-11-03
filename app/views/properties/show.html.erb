@@ -17,48 +17,81 @@
                         Share
                     </span>
                 </span>
-                <span class=" px-3 pt-2 pb-3 hover:rounded-md hover:bg-gray-200 font-medium cursor-pointer">
-                    <svg xmlns="http://www.w3.org/2000/svg" 
-                      viewBox="0 0 32 32" aria-hidden="true" 
-                      role="presentation" focusable="false"
-                      class=" inline w-6 h-6 stroke-black stroke-2 <%= @property.wishlisted_by?(current_user) ? 'fill-primary' : 'fill-none' %>"
-                      style=" overflow: visible;"
+                <span class=" px-3 pt-2 pb-3 hover:rounded-md hover:bg-gray-200 font-medium cursor-pointer"
                       data-controller="wishlist"
                       data-user-logged-in = "<%= user_signed_in? %>"
                       data-property-id="<%= @property.id %>"
                       data-user-id = "<%= current_user&.id %>"
                       data-wishlist-id = "<%= @property.wishlists.find_by(user: current_user)&.id %>"
                       data-action="click->wishlist#updateWishListStatus" 
-                      data-status= "<%= @property.wishlisted_by?(current_user) %>">
+                      data-status= "<%= @property.wishlisted_by?(current_user) %>"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" 
+                      viewBox="0 0 32 32" aria-hidden="true" 
+                      role="presentation" focusable="false"
+                      class=" inline w-6 h-6 stroke-black stroke-2 <%= @property.wishlisted_by?(current_user) ? 'fill-primary' : 'fill-none' %>"
+                      style=" overflow: visible;"
+                      data-wishlist-target= "icon"
+                      >
                       <path d="M16 28c7-4.73 14-10 14-17a6.98 6.98 0 0 0-7-7c-1.8 0-3.58.68-4.95 2.05L16 8.1l-2.05-2.05a6.98 6.98 0 0 0-9.9 0A6.98 6.98 0 0 0 2 11c0 7 7 12.27 14 17z"></path></svg>                
-                    <span class=" underline text-sm ms-1">
+                    <span class=" underline text-sm ms-1"
+                          data-wishlist-target="text"
+                    >
                         <%= @property.wishlisted_by?(current_user) ? "Saved" : "Save" %>
                     </span>
                 </span>
             </div>
         </div>
     <!-- Image gallery -->
-    <div class="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
+    <div class="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-2 lg:px-8">
       <div class="aspect-h-4 aspect-w-3 hidden overflow-hidden rounded-lg lg:block">
-        <img src="https://i.pinimg.com/564x/01/19/1f/01191fd3ece2dcd44122ff6d88149abc.jpg" alt="Two each of gray, white, and black shirts laying flat." class="h-full w-full object-cover object-center">
+        <%= image_tag @property.images[0], class: "h-full w-full object-cover object-center" %>
       </div>
-      <div class="hidden lg:grid lg:grid-cols-1 lg:gap-y-8">
+      <div class="hidden lg:grid lg:grid-cols-1 lg:gap-y-2">
         <div class="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
-          <img src="https://i.pinimg.com/564x/01/19/1f/01191fd3ece2dcd44122ff6d88149abc.jpg" alt="Model wearing plain black basic tee." class="h-full w-full object-cover object-center">
+          <%= image_tag @property.images[1], class: "h-full w-full object-cover object-center" %>
         </div>
         <div class="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
-          <img src="https://i.pinimg.com/564x/01/19/1f/01191fd3ece2dcd44122ff6d88149abc.jpg" alt="Model wearing plain gray basic tee." class="h-full w-full object-cover object-center">
+          <%= image_tag @property.images[2], class: "h-full w-full object-cover object-center" %>
         </div>
       </div>
-      <div class="aspect-h-5 aspect-w-4 lg:aspect-h-4 lg:aspect-w-3 sm:overflow-hidden sm:rounded-lg">
-        <img src="https://i.pinimg.com/564x/01/19/1f/01191fd3ece2dcd44122ff6d88149abc.jpg" alt="Model wearing plain white basic tee." class="h-full w-full object-cover object-center">
+      <div class="hidden lg:grid lg:grid-cols-1 lg:gap-y-2">
+        <div class="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
+          <%= image_tag @property.images[3], class: "h-full w-full object-cover object-center" %>
+        </div>
+        <div class="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
+          <%= image_tag @property.images[4], class: "h-full w-full object-cover object-center" %>
+        </div>
       </div>
+      
     </div>
 
     <!-- Product info -->
-    <div class="mx-auto max-w-2xl px-4 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pt-16">
+    <div class="mx-auto max-w-2xl px-4 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pt-8">
       <div class="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
-        <h1 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Basic Tee 6-Pack</h1>
+        <h2 class="text-xl font-bold tracking-tight text-gray-900 sm:text-xl">
+          <%= @property.address_1 %>, <%= @property.state %>, <%= @property.country %>
+        </h2>
+        <div class=" mt-1 text-sm font-light">
+            <%# TODO: check if any value is 0 or 1 or more than 1 %>
+            <%= @property.guest_count %> guests · <%= @property.bedroom_count %> bedrooms · <%= @property.bathroom_count %> bathrooms · <%= @property.bed_count %> beds
+
+        </div>
+        <div class=  " mt-1">
+          <% if @property.reviews_count != 0 %>
+              <div class=" flex items-center text-sm font-light">
+                  <svg class=" mr-2 h-3 w-3 fill-current text-sm" xmlns="http://www.w3.org/2000/svg" 
+                  viewBox="0 0 32 32" aria-hidden="true" 
+                  role="presentation" focusable="false" >
+                  <path fill-rule="evenodd" d="m15.1 1.58-4.13 8.88-9.86 1.27a1 1 0 0 0-.54 1.74l7.3 6.57-1.97 9.85a1 1 0 0 0 1.48 1.06l8.62-5 8.63 5a1 1 0 0 0 1.48-1.06l-1.97-9.85 7.3-6.57a1 1 0 0 0-.55-1.73l-9.86-1.28-4.12-8.88a1 1 0 0 0-1.82 0z"></path></svg>
+                  <span class=" font-medium">
+                    <%= @property.average_final_rating.round(2) %> · <span class=" underline cursor-pointer"><%= @property.reviews_count %> Reviews</span>
+                  </span>
+              </div> 
+          <%else%>
+              <span class=" font-light"> No reviews yet!</span>
+          <%end%>
+        </div>
       </div>
 
       <!-- Options -->
@@ -232,154 +265,27 @@
 
       <div class="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">
         <!-- Description and details -->
-        <div>
+        <div class=" border-t border-gray-200 pt-10 mt-4">
           <h3 class="sr-only">Description</h3>
 
           <div class="space-y-6">
-            <p class="text-base text-gray-900">The Basic Tee 6-Pack allows you to fully express your vibrant personality with three grayscale options. Feeling adventurous? Put on a heather gray tee. Want to be a trendsetter? Try our exclusive colorway: &quot;Black&quot;. Need to add an extra pop of color to your outfit? Our white tee has you covered.</p>
+            <p class="text-base text-gray-900">
+              <%= @property.description.to_plain_text.truncate(500) %>
+            </p>
+            <% if @property.description.to_plain_text.length > 50 %>
+              <div class=" flex items-center gap-1">
+                <span class=" font-medium underline">Show more</span>
+                <svg viewBox="0 0 18 18" role="presentation" aria-hidden="true" focusable="false" style="height: 12px; width: 12px; display: block; fill: var(--linaria-theme_palette-hof);"><path d="m4.29 1.71a1 1 0 1 1 1.42-1.41l8 8a1 1 0 0 1 0 1.41l-8 8a1 1 0 1 1 -1.42-1.41l7.29-7.29z" fill-rule="evenodd"></path></svg>
+              </div>
+            <% end %>
           </div>
         </div>
-
-        <div class="mt-10">
-          <h3 class="text-sm font-medium text-gray-900">Highlights</h3>
-
-          <div class="mt-4">
-            <ul role="list" class="list-disc space-y-2 pl-4 text-sm">
-              <li class="text-gray-400"><span class="text-gray-600">Hand cut and sewn locally</span></li>
-              <li class="text-gray-400"><span class="text-gray-600">Dyed with our proprietary colors</span></li>
-              <li class="text-gray-400"><span class="text-gray-600">Pre-washed &amp; pre-shrunk</span></li>
-              <li class="text-gray-400"><span class="text-gray-600">Ultra-soft 100% cotton</span></li>
-            </ul>
-          </div>
-        </div>
-
-        <section aria-labelledby="shipping-heading" class="mt-10">
-          <h2 id="shipping-heading" class="text-sm font-medium text-gray-900">Details</h2>
-
-          <div class="mt-4 space-y-6">
-            <p class="text-sm text-gray-600">The 6-Pack includes two black, two white, and two heather gray Basic Tees. Sign up for our subscription service and be the first to get new, exciting colors, like our upcoming &quot;Charcoal Gray&quot; limited release.</p>
-          </div>
-        </section>
       </div>
 
-      <div class="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
-        <!-- Reviews -->
-        <section aria-labelledby="reviews-heading" class="border-t border-gray-200 pt-10 lg:pt-16">
-          <h2 id="reviews-heading" class="sr-only">Reviews</h2>
-
-          <div class="space-y-10">
-            <div class="flex flex-col sm:flex-row">
-              <div class="order-2 mt-6 sm:ml-16 sm:mt-0">
-                <h3 class="text-sm font-medium text-gray-900">This is the best white t-shirt out there</h3>
-                <p class="sr-only">5 out of 5 stars</p>
-
-                <div class="mt-3 space-y-6 text-sm text-gray-600">
-                  <p>I've searched my entire life for a t-shirt that reflects every color in the visible spectrum. Scientists said it couldn't be done, but when I look at this shirt, I see white light bouncing right back into my eyes. Incredible!</p>
-                </div>
-              </div>
-
-              <div class="order-1 flex items-center sm:flex-col sm:items-start">
-                <img src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixqx=oilqXxSqey&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Mark Edwards." class="h-12 w-12 rounded-full">
-
-                <div class="ml-4 sm:ml-0 sm:mt-4">
-                  <p class="text-sm font-medium text-gray-900">Mark Edwards</p>
-                  <div class="mt-2 flex items-center">
-                    <!-- Active: "text-gray-900", Default: "text-gray-200" -->
-                    <svg class="text-gray-900 h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
-                    </svg>
-                    <svg class="text-gray-900 h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
-                    </svg>
-                    <svg class="text-gray-900 h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
-                    </svg>
-                    <svg class="text-gray-900 h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
-                    </svg>
-                    <svg class="text-gray-900 h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="flex flex-col sm:flex-row">
-              <div class="order-2 mt-6 sm:ml-16 sm:mt-0">
-                <h3 class="text-sm font-medium text-gray-900">Adds the perfect variety to my wardrobe</h3>
-                <p class="sr-only">4 out of 5 stars</p>
-
-                <div class="mt-3 space-y-6 text-sm text-gray-600">
-                  <p>I used to be one of those unbearable minimalists who only wore the same black v-necks every day. Now, I have expanded my wardrobe with three new crewneck options! Leaving off one star only because I wish the heather gray was more gray.</p>
-                </div>
-              </div>
-
-              <div class="order-1 flex items-center sm:flex-col sm:items-start">
-                <img src="https://images.unsplash.com/photo-1520785643438-5bf77931f493?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.5&w=256&h=256&q=80" alt="Blake Reid." class="h-12 w-12 rounded-full">
-
-                <div class="ml-4 sm:ml-0 sm:mt-4">
-                  <p class="text-sm font-medium text-gray-900">Blake Reid</p>
-                  <div class="mt-2 flex items-center">
-                    <!-- Active: "text-gray-900", Default: "text-gray-200" -->
-                    <svg class="text-gray-900 h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
-                    </svg>
-                    <svg class="text-gray-900 h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
-                    </svg>
-                    <svg class="text-gray-900 h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
-                    </svg>
-                    <svg class="text-gray-900 h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
-                    </svg>
-                    <svg class="text-gray-200 h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="flex flex-col sm:flex-row">
-              <div class="order-2 mt-6 sm:ml-16 sm:mt-0">
-                <h3 class="text-sm font-medium text-gray-900">All good things come in 6-Packs</h3>
-                <p class="sr-only">5 out of 5 stars</p>
-
-                <div class="mt-3 space-y-6 text-sm text-gray-600">
-                  <p>Tasty beverages, strong abs that will never be seen due to aforementioned tasty beverages, and these Basic Tees!</p>
-                </div>
-              </div>
-
-              <div class="order-1 flex items-center sm:flex-col sm:items-start">
-                <img src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Ben Russel." class="h-12 w-12 rounded-full">
-
-                <div class="ml-4 sm:ml-0 sm:mt-4">
-                  <p class="text-sm font-medium text-gray-900">Ben Russel</p>
-                  <div class="mt-2 flex items-center">
-                    <!-- Active: "text-gray-900", Default: "text-gray-200" -->
-                    <svg class="text-gray-900 h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
-                    </svg>
-                    <svg class="text-gray-900 h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
-                    </svg>
-                    <svg class="text-gray-900 h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
-                    </svg>
-                    <svg class="text-gray-900 h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
-                    </svg>
-                    <svg class="text-gray-900 h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
+      
     </div>
+    <%# đoạn mã này sẽ render partial 'properties/reviews' và truyền vào đó đối tượng @property để partial này sử dụng. %>
+    <%= render :partial => 'properties/reviews', :locals => {:property => @property} %>
     <section aria-labelledby="related-products-heading" class="bg-white">
       <div class="mx-auto max-w-2xl px-4 py-24 sm:px-6 lg:max-w-7xl lg:px-8">
         <h2 id="related-products-heading" class="text-xl font-bold tracking-tight text-gray-900">Customers also purchased</h2>

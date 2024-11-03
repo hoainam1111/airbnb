@@ -1,8 +1,11 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller{
-    updateWishListStatus(){
 
+    static targets = ['icon', 'text'];
+
+    updateWishListStatus(e){
+        e.preventDefault();
         //get status if user loged in
         // if not , redirect to login page
 
@@ -49,9 +52,13 @@ export default class extends Controller{
         .then(data => {
             console.log(data.id);
             this.element.dataset.wishlistId = data.id;
-            this.element.classList.remove("fill-none");
-            this.element.classList.add("fill-primary");
             this.element.dataset.status ="true";
+            this.iconTarget.classList.remove("fill-none");
+            this.iconTarget.classList.add("fill-primary");
+            if(this.textTarget){
+                this.textTarget.innerText = 'Saved';
+            }
+            
         })
         .catch(e => {
             console.log(e);
@@ -64,9 +71,12 @@ export default class extends Controller{
         })
         .then(response => {
             this.element.dataset.wishlistId = '';
-            this.element.classList.remove("fill-primary");
-            this.element.classList.add("fill-none");
             this.element.dataset.status ="false";
+            this.iconTarget.classList.remove("fill-primary");
+            this.iconTarget.classList.add("fill-none");
+            if(this.textTarget){
+                this.textTarget.innerText = 'Save';
+            }
         })
         .catch(e => {
             console.log(e);

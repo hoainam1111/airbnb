@@ -10,9 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_31_193142) do
+ActiveRecord::Schema[7.2].define(version: 2024_11_01_212507) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "action_text_rich_texts", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "body"
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
+  end
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -57,6 +67,10 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_31_193142) do
     t.string "price_currency"
     t.integer "reviews_count"
     t.decimal "average_final_rating"
+    t.integer "guest_count", default: 0
+    t.integer "bedroom_count", default: 0
+    t.integer "bed_count", default: 0
+    t.integer "bathroom_count", default: 0
   end
 
   create_table "reservations", force: :cascade do |t|

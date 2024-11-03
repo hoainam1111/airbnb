@@ -18,6 +18,7 @@ class Property < ApplicationRecord
   has_many :reservations, dependent: :destroy
   has_many :reserved_users, through: :reservations, source: :user, dependent: :destroy
 
+  has_rich_text :description
 
   def update_average_rating
     # this will get called whenever a new review is added or updated.
