@@ -1,32 +1,55 @@
 import { Controller } from "@hotwired/stimulus"
+import flatpickr from "flatpickr";
 
 export default class extends Controller {
-    static targets = ["nights", "baseFare","serviceFee", "totalAmount"]
+    static targets = ["nights","checkin","checkout", "baseFare","serviceFee", "totalAmount"]
     SERVICE_FEE = 0.18;
 
     connect() {
-        const perNightPrice = this.element.dataset.perNightPrice;
-        console.log(perNightPrice); 
+        flatpickr(this.checkinTarget, {
+            minDate: new Date().fp_incr(1),
+            onChange: (selectedDates, dateStr, instance) => {
+                this.triggerCheckoutDatePicker(selectedDates);
+            }
+        });
         this.updateDetails();
+        
+    }
+
+    triggerCheckoutDatePicker(selectedDates) {
+        flatpickr(this.checkoutTarget, {
+            minDate: new Date(selectedDates).fp_incr(1),
+            onChange: (selectedDates, dateStr, instance) => {
+                this.updateDetails();
+            }
+        });
+        this.checkoutTarget.click();
     }
     updateDetails() {
-        console.log(this.nightsTarget);
-        console.log(this.numberOfNights);
-        this.nightsTarget.textContent=this.numberOfNights();
-        this.baseFareTarget.textContent=this.calculateBaseFare();
-        this.serviceFeeTarget.textContent=this.calculateSeviceFee();
-        this.totalAmountTarget.textContent=this.calculateTotalAmount();
+        const nightsCount = this.numberOfNights;
+        const baseFare = this.calculateBaseFare(nightsCount);
+        const serviceFee = this.calculateSeviceFee(baseFare);
+        const totalAmount = this.calculateTotalAmount(baseFare, serviceFee);
+
+        this.nightsTarget.textContent=nightsCount;
+        this.baseFareTarget.textContent=baseFare;
+        this.serviceFeeTarget.textContent=serviceFee;
+        this.totalAmountTarget.textContent=totalAmount;
     }
-    numberOfNights(){
-        return 4;
+    get numberOfNights(){
+        const checkinDate = new Date(this.checkinTarget.value);
+        const checkoutDate = new Date(this.checkoutTarget.value);
+        // console.log(checkinDate);
+        // console.log(checkoutDate);
+        return (checkoutDate - checkinDate) / (1000 * 60 * 60 * 24);
     }
-    calculateBaseFare() {
-        return parseFloat((this.numberOfNights() * this.element.dataset.perNightPrice).toFixed(2));
+    calculateBaseFare(nightsCount) {
+        return parseFloat((nightsCount * this.element.dataset.perNightPrice).toFixed(2));
     }
-    calculateSeviceFee() {
-        return parseFloat((this.calculateBaseFare() * this.SERVICE_FEE).toFixed(2));
+    calculateSeviceFee(baseFare) {
+        return parseFloat((baseFare * this.SERVICE_FEE).toFixed(2));
     }
-    calculateTotalAmount() {
-        return parseFloat((this.calculateBaseFare() + this.calculateSeviceFee()).toFixed(2));
+    calculateTotalAmount(baseFare, serviceFee) {
+        return parseFloat((baseFare + serviceFee).toFixed(2));
     }
 }
