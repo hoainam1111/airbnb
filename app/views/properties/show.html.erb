@@ -44,7 +44,7 @@
         </div>
     <!-- Image gallery -->
     <div class="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-2 lg:px-8">
-      <div class="aspect-h-4 aspect-w-3 hidden overflow-hidden rounded-lg lg:block">
+      <div class="aspect-h-4 aspect-w-3 overflow-hidden rounded-lg lg:block">
         <%= image_tag @property.images[0], class: "h-full w-full object-cover object-center" %>
       </div>
       <div class="hidden lg:grid lg:grid-cols-1 lg:gap-y-2">
@@ -263,7 +263,7 @@
         </form>
       </div>
 
-      <div class="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">
+      <div class="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pb-6 lg:pr-8">
         <!-- Description and details -->
         <div class=" border-t border-gray-200 pt-10 mt-4">
           <h3 class="sr-only">Description</h3>
@@ -281,6 +281,8 @@
           </div>
         </div>
       </div>
+      <!-- Amenities -->
+      <%= render :partial => 'properties/amenities', :locals => {:amenities => @property.amenities} %>
 
       
     </div>
