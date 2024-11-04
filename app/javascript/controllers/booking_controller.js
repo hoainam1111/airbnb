@@ -4,10 +4,16 @@ import flatpickr from "flatpickr";
 export default class extends Controller {
     static targets = ["nights","checkin","checkout", "baseFare","serviceFee", "totalAmount"]
     SERVICE_FEE = 0.18;
+    disableDates = [];
 
     connect() {
+        // console.log(this.element.dataset.blockedDates);
+
+       this.formatBlockedDates();
+
         flatpickr(this.checkinTarget, {
             minDate: new Date().fp_incr(1),
+            disable: this.disableDates,
             onChange: (selectedDates, dateStr, instance) => {
                 this.triggerCheckoutDatePicker(selectedDates);
             }
@@ -16,14 +22,32 @@ export default class extends Controller {
         
     }
 
+    
+
     triggerCheckoutDatePicker(selectedDates) {
         flatpickr(this.checkoutTarget, {
             minDate: new Date(selectedDates).fp_incr(1),
+            disable: this.disableDates,
             onChange: (selectedDates, dateStr, instance) => {
                 this.updateDetails();
             }
         });
         this.checkoutTarget.click();
+    }
+    formatBlockedDates() {
+        const blockedDates = JSON.parse(this.element.dataset.blockedDates);
+
+        for(let i = 0 ; i < blockedDates.length; i++) {
+            const dates = blockedDates[i];
+            // console.log(dates[0]);
+            // console.log(dates[1]);
+            this.disableDates.push(
+                {
+                    from: dates[0], //check-in date
+                    to: dates[1],   //check-out date
+                }
+            )
+        }
     }
     updateDetails() {
         const nightsCount = this.numberOfNights;
