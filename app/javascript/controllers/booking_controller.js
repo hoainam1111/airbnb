@@ -39,8 +39,8 @@ export default class extends Controller {
 
         for(let i = 0 ; i < blockedDates.length; i++) {
             const dates = blockedDates[i];
-            // console.log(dates[0]);
-            // console.log(dates[1]);
+            console.log(dates[0]);
+            console.log(dates[1]);
             this.disableDates.push(
                 {
                     from: dates[0], //check-in date
@@ -75,5 +75,19 @@ export default class extends Controller {
     }
     calculateTotalAmount(baseFare, serviceFee) {
         return parseFloat((baseFare + serviceFee).toFixed(2));
+    }
+
+    reserveProperty(e) {
+        // Dùng để ngăn hành động mặc định của sự kiện, 
+        // chẳng hạn như ngăn việc chuyển trang khi bấm vào một liên kết hoặc gửi một form.
+        e.preventDefault(); 
+        const paramsData = {
+            checkin_date: this.checkinTarget.value,
+            checkout_date: this.checkoutTarget.value,
+        }
+        // chuyển đổi đối tượng paramsData thành chuỗi truy vấn (query string) phù hợp để thêm vào URL.
+        const paramsURL = (new URLSearchParams(paramsData)).toString();
+        const baseURL = e.target.dataset.reservePropertyUrl;
+        Turbo.visit(`${baseURL}?${paramsURL}`);
     }
 }
