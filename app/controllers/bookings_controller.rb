@@ -1,4 +1,5 @@
 class BookingsController < ApplicationController
+  before_action :authenticate_user!
   def new
     @property = Property.find(params[:property_id])
     # lấy thông tin từ url
