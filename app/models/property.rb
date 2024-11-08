@@ -23,6 +23,8 @@ class Property < ApplicationRecord
   # rubocop:disable Layout/TrailingWhitespace
   has_rich_text :description
 
+  has_many :payments, through: :reservations, dependent: :destroy
+
   def update_average_rating
     # this will get called whenever a new review is added or updated.
     average_rating = reviews.average(:final_rating)

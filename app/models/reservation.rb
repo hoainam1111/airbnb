@@ -5,6 +5,7 @@ class Reservation < ApplicationRecord
   validates :checkin_date, presence: true
   validates :checkout_date, presence: true
 
+  has_one :payment
   # Truy vấn tất cả các đặt phòng sắp tới (tương lai) và sắp xếp theo ngày nhận phòng.
   scope :upcoming_reservations, -> { where("checkin_date > ?", Date.today).order(:checkin_date) }
   scope :current_reservations, -> { where("checkout_date > ?", Date.today).where("checkin_date < ?", Date.today).order(:checkout_date) }
